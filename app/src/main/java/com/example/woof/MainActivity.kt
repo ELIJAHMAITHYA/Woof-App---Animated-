@@ -16,15 +16,15 @@
 
 package com.example.woof
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +46,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,14 +61,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.woof.data.Dog
 import com.example.woof.data.dogs
 import com.example.woof.ui.theme.WoofTheme
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.colorResource
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,8 +154,17 @@ fun DogItem(
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = modifier
+            .animateContentSize(
+                animationSpec = spring(
+                  dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
+
     ) {
-        Column() {
+        Column(
+            modifier = Modifier
+        ) {
 
             Row(
                 modifier = Modifier

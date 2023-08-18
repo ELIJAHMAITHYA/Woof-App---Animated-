@@ -23,7 +23,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -107,15 +110,27 @@ private fun DogItemButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val rotationState by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 500)
+    )
     IconButton(
         onClick = onClick,
         modifier = modifier
     ) {
         Icon(
-            imageVector = if(expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            imageVector = Icons.Filled.ExpandMore,
+
+            /** The code below is working : But i need to use AsState to animat the icon by changing color and rotating it
+             imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+             *
+
+             */
+           //
             contentDescription = stringResource(R.string.expand_button_content_description),
             //tint = colorResource(id = R.color.purple_500)
-            tint = MaterialTheme.colorScheme.secondary
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.rotate(rotationState)
         )
     }
 }
@@ -125,6 +140,7 @@ fun DogHobby(
     @StringRes hobby: Int,
     modifier: Modifier
 ) {
+
     Column(
         modifier = modifier
     ) {
@@ -152,11 +168,12 @@ fun DogItem(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier
             .animateContentSize(
                 animationSpec = spring(
-                  dampingRatio = Spring.DampingRatioMediumBouncy,
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
                     stiffness = Spring.StiffnessMedium
                 )
             )
